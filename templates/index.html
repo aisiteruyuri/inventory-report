@@ -12,66 +12,143 @@
       --blue:#1e40ff;
       --orange:#d35400;
       --muted:#6b7280;
+      --loc:#5a7d39;
+
+      --border:#d1d5db;
+      --soft:#eef2ff;
+      --ok:#22c55e;
     }
-    body{ margin:0; font-family:system-ui,"Noto Sans KR",sans-serif; background:var(--bg); }
-    .wrap{ max-width:1200px; margin:22px auto 60px; padding:0 16px; }
-    .card{ background:var(--panel); border:1px solid #e5e7eb; border-radius:12px; padding:16px; box-shadow:0 4px 14px rgba(0,0,0,.04); }
-    .title{ text-align:center; font-weight:800; margin:6px 0 12px; }
-    textarea{ width:100%; min-height:120px; border:1px solid #d1d5db; border-radius:10px; padding:12px; font-family:ui-monospace,Consolas,monospace; box-sizing:border-box; }
-    .row{ display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
-    button{ border:0; border-radius:10px; padding:10px 14px; font-weight:800; cursor:pointer; }
-    .ok{ background:#22c55e; color:#fff; }
-    .ghost{ background:#eef2ff; color:#1f2a60; }
-    .hint{ margin-top:10px; color:var(--muted); font-size:13px; line-height:1.5; }
+    body{ margin:0; font-family:system-ui,"Noto Sans KR",sans-serif; background:var(--bg); color:#111; }
+    .wrap{ max-width:1200px; margin:18px auto 50px; padding:0 14px; }
 
-    h1{ margin:18px 0 10px; text-align:center; letter-spacing:.35em; font-weight:900; }
+    /* ===== 상단 카드(캡처 스타일) ===== */
+    .card{
+      background:var(--panel);
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:18px 18px 16px;
+      box-shadow:0 6px 18px rgba(0,0,0,.08);
+    }
+    .card-title{
+      text-align:center;
+      font-weight:900;
+      margin:2px 0 10px;
+    }
+    textarea{
+      width:100%;
+      min-height:120px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:12px;
+      font-family:ui-monospace,Consolas,monospace;
+      box-sizing:border-box;
+      resize:vertical;
+    }
 
-    .board{ margin-top:18px; background:#fff; border-radius:12px; border:1px solid #e5e7eb; padding:10px; overflow-x:auto; }
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+      margin:12px 0 6px;
+    }
+    button{
+      border:0;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 2px 0 rgba(0,0,0,.06);
+    }
+    .btn-ok{ background:var(--ok); color:#fff; padding:10px 18px; }
+    .btn-ghost{ background:var(--soft); color:#1f2a60; }
+    .file{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:center;
+    }
+    input[type="file"]{ font-size:13px; }
+    .hint{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+    .hint ul{ margin:6px 0 0 18px; padding:0; }
+    .hint li{ margin:2px 0; }
+
+    /* ===== 하단 보드(캡처 스타일) ===== */
+    .board{
+      margin-top:14px;
+      background:#e9edf1;
+      border-radius:14px;
+      border:1px solid #e5e7eb;
+      padding:18px 10px 22px;
+      overflow-x:auto;
+    }
+    .board h1{
+      margin:6px 0 10px;
+      text-align:center;
+      font-size:28px;
+      letter-spacing:.35em;
+      font-weight:900;
+    }
     svg{ display:block; margin:0 auto; }
 
-    .node-circle{ fill:#fff; stroke:var(--line); stroke-width:2.5; }
-    .slot-box{ fill:#fff; stroke:var(--line); stroke-width:2.5; rx:10; ry:10; }
-    .pipe{ stroke:var(--line); stroke-width:5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    /* ===== SVG 스타일 ===== */
+    .node-circle{ fill:#fff; stroke:var(--line); stroke-width:2.8; }
+    .pipe{ stroke:var(--line); stroke-width:6; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .frame{ fill:none; stroke:var(--line); stroke-width:6; }
 
     .t-blue{ fill:var(--blue); font-weight:900; }
     .t-orange{ fill:var(--orange); font-weight:900; }
     .t-qty{ fill:#111; font-weight:900; }
-    .t-loc{ fill:#5a7d39; font-weight:900; }
+    .t-loc{ fill:var(--loc); font-weight:900; }
     .t-id{ fill:var(--muted); font-weight:900; }
   </style>
 </head>
 <body>
   <div class="wrap">
+
+    <!-- 상단 입력 영역 -->
     <div class="card">
-      <div class="title">데이터 입력 (엑셀 복사/붙여넣기)</div>
+      <div class="card-title">데이터 입력 (엑셀 복사/붙여넣기)</div>
+
       <textarea id="paste" spellcheck="false" placeholder="장치장  곡종  재고량
 A101   WUR   1,600
 A102   WCRS  1,700.557
 ..."></textarea>
 
       <div class="row">
-        <button class="ok" id="apply">현황표 업데이트</button>
-        <button class="ghost" id="demo">데모</button>
+        <button class="btn-ok" id="apply">현황표 업데이트</button>
+        <button class="btn-ghost" id="demo">데모</button>
 
-        <!-- 과제 6번 충족용: 엑셀 업로드(실무에선 숨겨도 됨) -->
-        <input type="file" id="file" accept=".xlsx,.xls" />
-        <button class="ghost" id="upload">엑셀 업로드</button>
+        <div class="file">
+          <input type="file" id="file" accept=".xlsx,.xls" />
+          <button class="btn-ghost" id="upload">엑셀 업로드</button>
+        </div>
       </div>
 
       <div class="hint">
-        • 붙여넣기 데이터는 서버에서 Python으로 파싱 후 SVG에 반영됩니다.<br/>
-        • 보안상 업로드 금지라면 “엑셀 업로드” 버튼은 숨기고(코드 주석/삭제) 붙여넣기만 쓰면 됩니다.
+        <ul>
+          <li>붙여넣기 데이터는 서버에서 Python으로 파싱 후 SVG에 반영됩니다.</li>
+          <li>보안상 업로드 금지라면 “엑셀 업로드” 버튼은 숨기고(코드 주석/삭제) 붙여넣기만 쓰면 됩니다.</li>
+        </ul>
       </div>
     </div>
 
-    <h1>일일재고현황표</h1>
+    <!-- 하단 표 영역 -->
     <div class="board">
+      <h1>일일재고현황표</h1>
       <svg id="svg" width="1100" height="520" viewBox="0 0 1100 520"></svg>
     </div>
+
   </div>
 
 <script>
-  // ===== 구조 정의 (이미지와 동일한 배치 컨셉) =====
+  // ===== 배치 정의 =====
   const NODE_IDS = [
     ["A101","A102","A103","A104","A105","A106"],
     ["A301","A302","A303","A304","A305","A306"],
@@ -80,130 +157,107 @@ A102   WCRS  1,700.557
   const TOP_SLOTS = ["A201","A202","A203","A204","A205","A206","A207"];
   const BOT_SLOTS = ["A401","A402","A403","A404","A405","A406","A407"];
 
-  // 상태(서버가 내려준 값으로 갱신)
   let state = { nodes:{}, slots:{} };
 
   const svg = document.getElementById("svg");
   const W=1100, H=520;
-  const margin={x:80,y:70};
+
+  // 2번 이미지처럼 중앙 배치+여백 크게 잡기
+  const margin = { x: 90, y: 88 };
   const cols=6, rows=3;
   const nodeR=44;
-  const gridW=W-margin.x*2;
-  const gridH=360;
-  const dx=gridW/(cols-1);
-  const dy=gridH/(rows-1);
 
-  const yTop=margin.y;
-  const yMid=margin.y+dy;
-  const yBot=margin.y+dy*2;
+  const gridW = W - margin.x*2;
+  const gridH = 330;
+  const dx = gridW/(cols-1);
+  const dy = gridH/(rows-1);
 
-  const xAt=(c)=>margin.x+dx*c;
-  const nodePos=(c,r)=>({x:xAt(c), y:margin.y+dy*r});
+  const yTop = margin.y;
+  const yMid = margin.y + dy;
+  const yBot = margin.y + dy*2;
+
+  const frameX = margin.x - 70;
+  const frameY = margin.y - 62;
+  const frameW = gridW + 140;
+  const frameH = gridH + 124;
+
+  const xAt = (c)=> margin.x + dx*c;
+  const nodePos = (c,r)=>({ x:xAt(c), y: margin.y + dy*r });
 
   function el(name, attrs={}){
     const e=document.createElementNS("http://www.w3.org/2000/svg", name);
     for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, String(v));
     return e;
   }
+  function textCentered(x,y,cls,size,txt){
+    const t = el("text", { x, y, "text-anchor":"middle", class: cls, "font-size": size });
+    t.textContent = txt;
+    return t;
+  }
+  function slotCenter(idx, band){
+    const x = frameX + frameW * (idx/6);
+    const y = (band==="top") ? ((yTop+yMid)/2) : ((yMid+yBot)/2);
+    return {x,y};
+  }
+  function drawSlotText(id, idx, band){
+    const p = slotCenter(idx, band);
+    const item = (state.slots?.[id]?.item || "").toUpperCase();
+    const qty  = (state.slots?.[id]?.qty ?? "");
+
+    svg.appendChild(textCentered(p.x, p.y-10, "t-orange", 16, item || "—"));
+    svg.appendChild(textCentered(p.x, p.y+14, "t-qty",    20, qty==="" ? "" : String(qty)));
+    svg.appendChild(textCentered(p.x, p.y+36, "t-id",     13, id));
+  }
 
   function draw(){
     svg.innerHTML="";
 
     // 외곽 프레임
-    const frameX=margin.x-60;
-    const frameY=margin.y-50;
-    const frameW=gridW+120;
-    const frameH=gridH+100;
-    svg.appendChild(el("rect",{x:frameX,y:frameY,width:frameW,height:frameH,fill:"none",stroke:"#222","stroke-width":5}));
+    svg.appendChild(el("rect", { x:frameX, y:frameY, width:frameW, height:frameH, class:"frame" }));
 
     // 중앙 가로 라인
-    svg.appendChild(el("line",{x1:frameX,y1:yMid,x2:frameX+frameW,y2:yMid,class:"pipe"}));
+    svg.appendChild(el("line", { x1:frameX, y1:yMid, x2:frameX+frameW, y2:yMid, class:"pipe" }));
 
-    // 수평 연결
+    // 상/중/하 수평 파이프
     for(let r=0;r<rows;r++){
       for(let c=0;c<cols-1;c++){
         const p1=nodePos(c,r), p2=nodePos(c+1,r);
-        svg.appendChild(el("line",{x1:p1.x+nodeR,y1:p1.y,x2:p2.x-nodeR,y2:p2.y,class:"pipe"}));
+        svg.appendChild(el("line", { x1:p1.x+nodeR, y1:p1.y, x2:p2.x-nodeR, y2:p2.y, class:"pipe" }));
       }
     }
-    // 수직 연결
+
+    // 수직 파이프
     for(let c=0;c<cols;c++){
       const pT=nodePos(c,0), pM=nodePos(c,1), pB=nodePos(c,2);
-      svg.appendChild(el("line",{x1:pT.x,y1:pT.y+nodeR,x2:pM.x,y2:pM.y-nodeR,class:"pipe"}));
-      svg.appendChild(el("line",{x1:pM.x,y1:pM.y+nodeR,x2:pB.x,y2:pB.y-nodeR,class:"pipe"}));
+      svg.appendChild(el("line", { x1:pT.x, y1:pT.y+nodeR, x2:pM.x, y2:pM.y-nodeR, class:"pipe" }));
+      svg.appendChild(el("line", { x1:pM.x, y1:pM.y+nodeR, x2:pB.x, y2:pB.y-nodeR, class:"pipe" }));
     }
 
-    // 슬롯(네모) 14개
-const slotW = 130, slotH = 56;   // ← 폭도 조금 늘림(110→130)
+    // 프레임-노드 연결(좌/우 끝)
+    svg.appendChild(el("line", { x1:frameX, y1:yTop, x2:nodePos(0,0).x-nodeR, y2:yTop, class:"pipe" }));
+    svg.appendChild(el("line", { x1:frameX, y1:yMid, x2:nodePos(0,1).x-nodeR, y2:yMid, class:"pipe" }));
+    svg.appendChild(el("line", { x1:frameX, y1:yBot, x2:nodePos(0,2).x-nodeR, y2:yBot, class:"pipe" }));
 
-// 슬롯이 프레임 밖으로 나가지 않게, 좌우 여백 확보
-const slotPad = (slotW / 2) + 14; // ← “네모 절반 + 여유”
+    svg.appendChild(el("line", { x1:nodePos(5,0).x+nodeR, y1:yTop, x2:frameX+frameW, y2:yTop, class:"pipe" }));
+    svg.appendChild(el("line", { x1:nodePos(5,1).x+nodeR, y1:yMid, x2:frameX+frameW, y2:yMid, class:"pipe" }));
+    svg.appendChild(el("line", { x1:nodePos(5,2).x+nodeR, y1:yBot, x2:frameX+frameW, y2:yBot, class:"pipe" }));
 
-function slotPos(idx, band){
-  const usableW = frameW - (slotPad * 2);      // 실제로 쓸 수 있는 폭
-  const sx = frameX + slotPad + usableW * (idx / 6);
-  const y  = (band==="top") ? (yTop+yMid)/2 : (yMid+yBot)/2;
-  return {x:sx, y:y};
-}
+    // 슬롯(텍스트만)
+    TOP_SLOTS.forEach((id,i)=>drawSlotText(id,i,"top"));
+    BOT_SLOTS.forEach((id,i)=>drawSlotText(id,i,"bot"));
 
-function drawSlot(id, idx, band){
-  const p = slotPos(idx, band);
-
-  const item = (state.slots?.[id]?.item || "").toUpperCase();
-  const qty  = (state.slots?.[id]?.qty ?? "");
-
-  svg.appendChild(el("rect",{
-    x:p.x-slotW/2, y:p.y-slotH/2, width:slotW, height:slotH, class:"slot-box"
-  }));
-
-  const maxText = slotW - 18; // 텍스트가 사용할 최대 폭
-
-  const t1 = el("text",{
-    x:p.x, y:p.y-10, "text-anchor":"middle",
-    class:"t-orange", "font-size":16,
-    textLength: maxText, lengthAdjust: "spacingAndGlyphs"
-  });
-  t1.textContent = item || "—";
-  svg.appendChild(t1);
-
-  const t2 = el("text",{
-    x:p.x, y:p.y+14, "text-anchor":"middle",
-    class:"t-qty", "font-size":20,
-    textLength: maxText, lengthAdjust: "spacingAndGlyphs"
-  });
-  t2.textContent = (qty==="" ? "" : qty);
-  svg.appendChild(t2);
-
-  const t3 = el("text",{
-    x:p.x, y:p.y+34, "text-anchor":"middle",
-    class:"t-id", "font-size":13
-  });
-  t3.textContent = id;
-  svg.appendChild(t3);
-}
-
-
-    // 노드(원) 18개
+    // 노드(원)
     for(let r=0;r<rows;r++){
       for(let c=0;c<cols;c++){
-        const id=NODE_IDS[r][c];
-        const p=nodePos(c,r);
-        const item=(state.nodes?.[id]?.item || "").toUpperCase();
-        const qty=(state.nodes?.[id]?.qty ?? "");
+        const id = NODE_IDS[r][c];
+        const p = nodePos(c,r);
+        const item = (state.nodes?.[id]?.item || "").toUpperCase();
+        const qty  = (state.nodes?.[id]?.qty ?? "");
 
-        svg.appendChild(el("circle",{cx:p.x,cy:p.y,r:nodeR,class:"node-circle"}));
-
-        const t1=el("text",{x:p.x,y:p.y-10,"text-anchor":"middle",class:"t-blue","font-size":16});
-        t1.textContent=item || "—";
-        svg.appendChild(t1);
-
-        const t2=el("text",{x:p.x,y:p.y+14,"text-anchor":"middle",class:"t-qty","font-size":22});
-        t2.textContent=qty===""?"":qty;
-        svg.appendChild(t2);
-
-        const t3=el("text",{x:p.x,y:p.y+34,"text-anchor":"middle",class:"t-loc","font-size":13});
-        t3.textContent=id;
-        svg.appendChild(t3);
+        svg.appendChild(el("circle", { cx:p.x, cy:p.y, r:nodeR, class:"node-circle" }));
+        svg.appendChild(textCentered(p.x, p.y-10, "t-blue", 16, item || "—"));
+        svg.appendChild(textCentered(p.x, p.y+14, "t-qty",  22, qty==="" ? "" : String(qty)));
+        svg.appendChild(textCentered(p.x, p.y+36, "t-loc",  13, id));
       }
     }
   }
@@ -273,10 +327,8 @@ A505\tWASWP\t1,696
 A506\tWUR\t1,700`;
   });
 
-  // 최초 렌더(빈 화면)
   state = { nodes:{}, slots:{} };
   draw();
 </script>
 </body>
 </html>
-
